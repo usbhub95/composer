@@ -64,10 +64,10 @@ if [ ! -d "$install_directory/config" ]; then
 fi
 
 echo "copying files..."
-echo "copying \"docker-compose.$filename.yaml\" to \"$install_directory/docker-compose.yaml\"..."
-cp "docker-compose.$filename.yaml" "$install_directory/docker-compose.yaml"
-echo "copying \"$filename.env\" to \"$install_directory/.env\"..."
-cp "$filename.env" "$env_file"
+echo "copying \"$filename/docker-compose.yaml\" to \"$install_directory/docker-compose.yaml\"..."
+cp "$filename/docker-compose.yaml" "$install_directory/docker-compose.yaml"
+echo "copying \"$filename/.env\" to \"$install_directory/.env\"..."
+cp "$filename/.env" "$env_file"
 
 echo "udpate .env file..."
 sed -i -e "s|<your_PUID>|$puid|g" "$env_file" \
