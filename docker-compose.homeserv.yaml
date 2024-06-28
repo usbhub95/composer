@@ -1,0 +1,69 @@
+services:
+  # Torrent client - qBittorrent
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - WEBUI_PORT=8080
+    volumes:
+      - ${MEDIA_DIRECTORY}/downloads:/downloads
+      - ${INSTALL_DIRECTORY}/config/qbittorrent:/config
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+  # Music scraper - Lidarr
+  lidarr:
+    image: lscr.io/linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${MEDIA_DIRECTORY}/music:/music
+      - ${MEDIA_DIRECTORY}/downloads:/downloads
+      - ${INSTALL_DIRECTORY}/config/lidarr:/config
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+  # Audio/E-book scraper - Readarr
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${MEDIA_DIRECTORY}/books:/books
+      - ${MEDIA_DIRECTORY}/downloads:/downloads
+      - ${INSTALL_DIRECTORY}/config/readarr:/config
+    ports:
+      - 8787:8787
+    restart: unless-stopped
+  # Tracker manager - Jackett
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - AUTO_UPDATE=true
+    volumes:
+      - ${INSTALL_DIRECTORY}/config/jackett:/config
+      - ${MEDIA_DIRECTORY}/downloads:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+  # Auto update - Watchtower
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_INCLUDE_RESTARTING=true
+      - WATCHTOWER_INCLUDE_STOPPED=true
+      - WATCHTOWER_ROLLING_RESTART=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock   
+    restart: unless-stopped
