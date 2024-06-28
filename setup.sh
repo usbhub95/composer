@@ -35,19 +35,30 @@ if [ ! -d "$install_directory" ]; then
     echo "\"$install_directory\" not found, creating..."
     sudo mkdir -p "$install_directory"
 	sudo chown -R $USER:$USER "$install_directory"
+	sudo chown -R "$puid":"$pgid" "$install_directory"
+	
 fi
 if [ ! -w "$install_directory" ] || [ ! -r "$install_directory" ]; then
 	echo "\"$install_directory\" found with incorrect perms, fixing..."
 	sudo chown -R $USER:$USER "$install_directory"
+	sudo chown -R "$puid":"$pgid" "$install_directory"
 fi
 if [ ! -d "$media_directory" ]; then
     echo "\"$media_directory\" not found, creating..."
     sudo mkdir -p "$media_directory"
 	sudo chown -R $USER:$USER "$media_directory"
+	sudo chown -R "$puid":"$pgid" "$media_directory"
 fi
 if [ ! -w "$media_directory" ] || [ ! -r "$media_directory" ]; then
 	echo "\"$media_directory\" found with incorrect perms, fixing..."
 	sudo chown -R $USER:$USER "$media_directory"
+	sudo chown -R "$puid":"$pgid" "$install_directory"
+fi
+if [ ! -d "$install_directory/config" ]; then
+	echo "\"$install_directory\" not found, creating..."
+    sudo mkdir -p "$install_directory/config"
+	sudo chown -R $USER:$USER "$install_directory/config"
+	sudo chown -R "$puid":"$pgid" "$install_directory/config"
 fi
 
 echo "copying files..."
