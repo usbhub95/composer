@@ -1,6 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
+if [ ! command -v sudo &> /dev/null ]; then
+	echo "sudo not found, installing..."
+	apt install sudo
+	exit 1
+fi
+
 if [[ "$EUID" = 0 ]]; then
     echo "do not run from sudo!"
 	exit 255
