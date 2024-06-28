@@ -25,7 +25,7 @@ echo "getting ready..."
 puid=$(id -u "$USER");
 pgid=$(id -g "$USER");
 read -p "input config to set up: " filename
-filename=$(filename)
+filename=${filename}
 media_directory="$filename/media"
 install_directory="$filename/install/"
 env_file="$install_directory/.env"
