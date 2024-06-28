@@ -21,6 +21,8 @@ else
 	bash ./setup-docker.sh
 fi
 
+sudo usermod -aG docker $USER
+
 echo "getting ready..."
 puid=$(id -u "$USER");
 pgid=$(id -g "$USER");
