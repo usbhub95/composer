@@ -17,3 +17,4 @@ sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
+sudo su $USER --session-command "bash setup.sh"
