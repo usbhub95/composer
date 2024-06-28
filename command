@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo
+set euo
 
 dc="docker compose -f <filename>"
 install_directory="<install_directory>"
