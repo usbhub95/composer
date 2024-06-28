@@ -40,7 +40,6 @@ if [ ! -w "$install_directory" ] || [ ! -r "$install_directory" ]; then
 	echo "\"$install_directory\" found with incorrect perms, fixing..."
 	sudo chown -R $USER:$USER "$install_directory"
 fi
-echo "\"$install_directory\" found!"
 if [ ! -d "$media_directory" ]; then
     echo "\"$media_directory\" not found, creating..."
     sudo mkdir -p "$media_directory"
@@ -50,7 +49,6 @@ if [ ! -w "$media_directory" ] || [ ! -r "$media_directory" ]; then
 	echo "\"$media_directory\" found with incorrect perms, fixing..."
 	sudo chown -R $USER:$USER "$media_directory"
 fi
-echo "\"$media_directory\" found!"
 
 echo "copying files..."
 echo "copying \"docker-compose.$filename.yaml\" to \"$install_directory/docker-compose.yaml\"..."
