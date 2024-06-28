@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -euo
 
 if [ ! command -v sudo &> /dev/null ]; then
 	echo "sudo not found, setting up and logging out..."
