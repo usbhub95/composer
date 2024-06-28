@@ -62,8 +62,7 @@ echo "udpate .env file..."
 sed -i -e "s|<your_PUID>|$puid|g" "$env_file" \
  -e "s|<your_PGID>|$pgid|g" "$env_file" \
  -e "s|<media_directory>|$media_directory|g" "$env_file" \
- -e "s|<media_service>|$media_service|g" "$env_file" \
- -e "s|<media_service>|$media_service|g" "$filename"
+ -e "s|<install_directory>|$install_directory|g" "$env_file"
  
 echo "running docker compose..."
 docker compose -f "$install_directory/docker-compose.yaml" up -d
