@@ -3,12 +3,11 @@ set -euo pipefail
 IFS=$'\n\t'
 
 composer="docker compose -f <dockerfile>"
-installed="<installed>"
 name="<name>"
 
-option=${1:-"--help"}
+param=${1:-"--help"}
 
-case $option in
+case $param in
 	--help)
 		echo "$name"
 		echo
@@ -23,26 +22,26 @@ case $option in
 		;;
 	restart)
 		echo "restarting $name containers"
-		$dc stop && $dc up -d
+		$composer stop && $composer up -d
 		echo "$name containers are starting, this may take a while..."
 		exit 0
 		;;
 	stop)
 		echo "stopping $name containers"
-		$dc stop
+		$composer stop
 		echo "$name containers have been stopped!"
 		exit 0
 		;;
 	start)
 		echo "starting and permanently enabling $name containers and services..."
-		$dc up -d
+		$composer up -d
 		echo "$name services have been permanently enabled!"
 		echo "$name containers are starting, this may take a while..."
 		exit 0
 		;;
 	disable)
 		echo "stopping and permanently disabling $name containers and services..."
-		$dc down
+		$composer down
 		echo "$name services have been permanently disabled!"
 		echo "$name containers have been stopped!"
 		exit 0

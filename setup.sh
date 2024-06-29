@@ -39,7 +39,6 @@ sudo sed -i -e "s|<puid>|$puid|g" "$install/.env" \
  
 echo "setting up $config command..."
 sudo sed -i -e "s|<dockerfile>|$install/docker-compose.yaml|g" command \
- -e "s|<installed>|$install|g"  \
  -e "s|<name>|$config|g"
 sudo cp command "/usr/local/bin/$config"
 sudo chmod +x "/usr/local/bin/$config"
