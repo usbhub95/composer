@@ -30,7 +30,7 @@ config=${config:-"homeserv"}
 installroot="/$config"
 if [ ! -d "$installroot" ]; then
     echo "creating \"$installroot\"..."
-    if mkdir -pfr "$installroot"; then
+    if mkdir -p "$installroot"; then
         echo "\"$installroot\" created..."
     else
         echo "\"$installroot\" NOT created!"
