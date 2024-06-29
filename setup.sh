@@ -5,17 +5,19 @@ IFS=$'\n\t'
 puid=$(id -u "$USER");
 pgid=$(id -g "$USER");
 if [[ "$EUID" = 0 ]]; then
-    echo "do not run from sudo, exiting..."
+    echo "do not sudo this, exiting..."
 	exit 255
 fi
 if command -v git &> /dev/null; then
-	echo "skipping git..."
+	echo
 else
 	echo "setting up git..."
 	sudo apt install -y git
 fi
-if [command -v docker &> /dev/null && docker compose version &> /dev/null]; then
-	echo "skipping docker..."
+if command -v docker &> /dev/null; then
+	if docker compose version &> /dev/null; then
+		echo
+	fi
 else
 	echo "setting up docker..."
 	bash ./setup-docker.sh
