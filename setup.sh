@@ -24,7 +24,7 @@ read -p "input config to set up: " config
 config=${config}
 
 echo "setting up installation..."
-sudo cp -rf "$config" "/"
+sudo cp -Rf "$config" "/"
 sudo chown -R $USER:$USER "/$config"
 sudo chown -R "$puid":"$pgid" "/$config/"
 install="/$config"
