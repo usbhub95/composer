@@ -22,10 +22,9 @@ puid=$(id -u "$USER");
 pgid=$(id -g "$USER");
 read -p "input config to set up: " config
 config=${config}
-group-root="/$config"
-group-install="$group-root/install"
+group-install="/$config/install"
 group-config="$group-config"
-group-media="$group-root/media"
+group-media="/$config/media"
 group-env="./$config/.env"
 group-composer="./$config/docker-compose.yaml"
 
