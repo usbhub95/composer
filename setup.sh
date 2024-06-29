@@ -28,7 +28,7 @@ sudo chown -R $USER:$USER "/$config"
 sudo chown -R "$puid":"$pgid" "/$config/"
 
 echo "setting up..."
-install="/$config/"
+install="/$config"
 
 echo "setting up .env file..."
 sudo sed -i -e "s|<puid>|$puid|g" "$install/.env" \
