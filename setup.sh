@@ -8,7 +8,7 @@ if [[ "$EUID" = 0 ]]; then
 fi
 
 echo "setting up git..."
-sudo apt install git
+sudo apt install -y git
 
 echo "setting up docker..."
 bash ./setup-docker.sh
