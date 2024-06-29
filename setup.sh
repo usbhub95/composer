@@ -1,13 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-
-if [ ! command -v sudo &> /dev/null ]; then
-	echo "sudo not found, setting up and logging out..."
-	apt install sudo
-	sudo adduser user sudo
-	sudo adduser root sudo
-	logout
-fi
+IFS=$'\n\t'
 
 if [[ "$EUID" = 0 ]]; then
     echo "do not run from sudo, exiting..."

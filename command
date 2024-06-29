@@ -1,5 +1,6 @@
 #!/bin/bash
 set -euo pipefail
+IFS=$'\n\t'
 
 dc="docker compose -f <filename>"
 install_directory="<install_directory>"
