@@ -30,16 +30,16 @@ install="/$config/install"
 sudo chown -R $USER:$USER "/$config"
 sudo chown -R "$puid":"$pgid" "/$config"
 echo "setting up .env file..."
-sed -i -e "s|<puid>|$puid|g" "$install/.env" \
- -e "s|<pgid>|$pgid|g" "$install/.env" \
- -e "s|<media>|/$config/media|g" "$install/.env" \
- -e "s|<installed>|$install|g" "$install/.env"
+sed -i -e "s|<puid>|$puid|g" "/$config/.env" \
+ -e "s|<pgid>|$pgid|g" "/$config/.env" \
+ -e "s|<media>|/$config/media|g" "/$config/.env" \
+ -e "s|<installed>|$install|g" "/$config/.env"
 echo "setting up $config command..."
-sudo sed -i -e "s|<composer>|$install/docker-compose.yaml|g" command \
+sudo sed -i -e "s|<composer>|/$config/docker-compose.yaml|g" command \
  -e "s|<name>|$config|g" command
 sudo cp command "/usr/local/bin/$config"
 sudo chmod +x "/usr/local/bin/$config"
 echo "setting up docker compose..."
-docker compose -f "$install/docker-compose.yaml" up -d
+docker compose -f "/$config/docker-compose.yaml" up -d
 echo "done!"
 exit 0
