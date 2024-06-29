@@ -12,5 +12,5 @@ echo \
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 sudo usermod -a -G docker $USER
-sudo reboot
+sudo su $USER --session-command "bash go.sh"
 exit 0
