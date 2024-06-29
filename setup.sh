@@ -14,7 +14,7 @@ else
 	echo "setting up git..."
 	sudo apt install -y git
 fi
-if [command -v docker &> /dev/null] && [docker compose version &> /dev/null]; then
+if [command -v docker &> /dev/null && docker compose version &> /dev/null]; then
 	echo "skipping docker..."
 else
 	echo "setting up docker..."
@@ -23,7 +23,7 @@ fi
 read -p "input config to set up: " config
 config=${config}
 echo "setting up installation..."
-cp -R "$config/" "/$config"
+sudo cp -R "$config/" "/$config"
 install="/$config/install"
 sudo chown -R $USER:$USER "/$config"
 sudo chown -R "$puid":"$pgid" "/$config"
