@@ -10,8 +10,10 @@ fi
 echo "setting up git..."
 sudo apt install -y git
 
-echo "setting up docker..."
-bash ./setup-docker.sh
+if [ ! command -v docker &> /dev/null]; then
+	echo "setting up docker..."
+	bash ./setup-docker.sh
+fi
 
 echo "setting up..."
 puid=$(id -u "$USER");

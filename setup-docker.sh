@@ -14,6 +14,7 @@ echo \
 sudo apt update
 echo "setting up docker..."
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-sudo usermod -aG docker $USER
+sudo usermod -a -G docker $USER
 echo "done!"
+logout
 exit 0
