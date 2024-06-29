@@ -10,7 +10,7 @@ fi
 echo "setting up git..."
 sudo apt install -y git
 
-if [ ! command -v docker &> /dev/null]; then
+if ![command -v docker &> /dev/null]; then
 	echo "setting up docker..."
 	bash ./setup-docker.sh
 fi
