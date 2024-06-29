@@ -25,11 +25,11 @@ config=${config}
 
 echo "setting up installation..."
 sudo cp -r "$config" "/"
-sudo cp "$config/install/.env" "/$config/install"
-sudo cp "$config/install/docker-compose.yaml" "/$config/install"
+#sudo cp "$config/install/.env" "/$config/install"
+#sudo cp "$config/install/docker-compose.yaml" "/$config/install"
 sudo chown -R $USER:$USER "/$config"
 sudo chown -R "$puid":"$pgid" "/$config"
-install="/$config"
+install="/$config/install"
 
 echo "setting up .env file..."
 sudo sed -i -e "s|<puid>|$puid|g" "$install/.env" \
