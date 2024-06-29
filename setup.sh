@@ -22,8 +22,8 @@ fi
 
 read -p "input config to set up: " config
 config=${config}
-local-env="/$config/.env"
-local-composer="/$config/docker-compose.yaml"
+local-env="$config/dot.env"
+local-composer="$config/docker-compose.yaml"
 
 echo "setting up installation..."
 sudo mkdir -p "/$config/install"
