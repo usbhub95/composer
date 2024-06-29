@@ -18,26 +18,26 @@ case $param in
 		;;
 	restart)
 		echo "restarting $name containers"
-		"$group stop" && "$group up -d"
+		$group stop && $group up -d
 		echo "$name containers are starting, this may take a while..."
 		exit 0
 		;;
 	stop)
 		echo "stopping $name containers"
-		"$group stop"
+		$group stop
 		echo "$name containers have been stopped!"
 		exit 0
 		;;
 	start)
 		echo "starting and permanently enabling $name containers and services..."
-		"$group up -d"
+		$group up -d
 		echo "$name services have been permanently enabled!"
 		echo "$name containers are starting, this may take a while..."
 		exit 0
 		;;
 	disable)
 		echo "stopping and permanently disabling $name containers and services..."
-		"$group down"
+		$group down
 		echo "$name services have been permanently disabled!"
 		echo "$name containers have been stopped!"
 		exit 0
