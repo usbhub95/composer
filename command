@@ -1,16 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 IFS=$'\n\t'
-
 group="docker compose -f <composer>"
 name="<name>"
-
 param=${1:-"--help"}
-
 case $param in
 	--help)
-		echo "$name"
-		echo
+		echo "$name - docker group"
 		echo "Usage: $name [--help|restart|stop|start|disable]"
 		echo "options:"
 		echo "--help     displays this help message"
