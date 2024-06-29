@@ -43,13 +43,13 @@ echo "setting up \"$filename/.env\" as \"$install_directory/.env\"..."
 cp "$filename/.env" "$env_file"
 
 echo "setting up .env file..."
-sed -i -e "s|<your_PUID>|$puid|g" "$env_file" \
+sudo sed -i -e "s|<your_PUID>|$puid|g" "$env_file" \
  -e "s|<your_PGID>|$pgid|g" "$env_file" \
  -e "s|<media_directory>|$media_directory|g" "$env_file" \
  -e "s|<install_directory>|$install_directory|g" "$env_file"
  
 echo "setting up $filename command..."
-sed -i -e "s|<filename>|$install_directory/docker-compose.yaml|g" command \
+sudo sed -i -e "s|<filename>|$install_directory/docker-compose.yaml|g" command \
  -e "s|<install_directory>|$install_directory|g"  \
  -e "s|<command_name>|$filename|g"
 sudo cp command "/usr/local/bin/$filename"
