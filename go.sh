@@ -27,7 +27,7 @@ else
 	bash ./getdocker.sh
 fi
 
-read "config name? [homeserv]" config
+read -i "config name? [homeserv]" config
 config=${config:-"homeserv"}
 installroot="/$config"
 
