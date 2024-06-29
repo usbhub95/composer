@@ -22,15 +22,15 @@ fi
 
 read -p "input config to set up: " config
 config=${config}
-local-env="$config.env"
-local-composer="$config.docker-compose.yaml"
+localenv="$config.env"
+localcomposer="$config.docker-compose.yaml"
 
 echo "setting up installation..."
 sudo mkdir -p "/$config/install"
 sudo mkdir -p "/$config/media"
 install="/$config/install"
-sudo cp $local-env "$install/.env"
-sudo cp $local-composer "$install/docker-compose.yaml"
+sudo cp $localenv "$install/.env"
+sudo cp $localcomposer "$install/docker-compose.yaml"
 sudo chown -R $USER:$USER "/$config"
 sudo chown -R "$puid":"$pgid" "/$config"
 
