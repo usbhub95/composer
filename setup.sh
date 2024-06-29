@@ -23,11 +23,10 @@ fi
 read -p "input config to set up: " config
 config=${config}
 
+echo "setting up installation..."
 sudo cp -rf "$config" "/"
 sudo chown -R $USER:$USER "/$config"
 sudo chown -R "$puid":"$pgid" "/$config/"
-
-echo "setting up..."
 install="/$config"
 
 echo "setting up .env file..."
