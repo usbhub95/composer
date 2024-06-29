@@ -18,7 +18,7 @@ fi
 read -p "input config to set up: " config
 config=${config}
 echo "setting up .env file..."
-sed -i -e "s|<puid>|$puid|g" "$config/.env" \
+sudo sed -i -e "s|<puid>|$puid|g" "$config/.env" \
  -e "s|<pgid>|$pgid|g" "$config/.env" \
  -e "s|<media>|/$config/media|g" "$config/.env" \
  -e "s|<installed>|/$config/install|g" "$config/.env"
