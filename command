@@ -2,9 +2,9 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-dc="docker compose -f <filename>"
-install_directory="<install_directory>"
-name="<command_name>"
+composer="docker compose -f <dockerfile>"
+installed="<installed>"
+name="<name>"
 
 option=${1:-"--help"}
 

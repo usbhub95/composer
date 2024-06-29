@@ -20,47 +20,50 @@ fi
 echo "setting up..."
 puid=$(id -u "$USER");
 pgid=$(id -g "$USER");
-read -p "input config to set up: " filename
-filename=${filename}
-media_directory="/$filename/media"
-install_directory="/$filename/install"
-env_file="/$install_directory/.env"
+read -p "input config to set up: " config
+config=${config}
+group-root="/$config"
+group-install="$group-root/install"
+group-config="$group-config"
+group-media="$group-root/media"
+group-env="./$config/.env"
+group-composer="./$config/docker-compose.yaml"
 
-echo "setting up \"$install_directory\"..."
-sudo mkdir -p "$install_directory"	
-sudo chown -R $USER:$USER "$install_directory"
-sudo chown -R "$puid":"$pgid" "$install_directory"
+echo "setting up \"$group-install\"..."
+sudo mkdir -p "$group-install"	
+sudo chown -R $USER:$USER "$group-install"
+sudo chown -R "$puid":"$pgid" "$group-install"
 
-echo "setting up \"$media_directory\"..."
-sudo mkdir -p "$media_directory"
-sudo chown -R $USER:$USER "$media_directory"
-sudo chown -R "$puid":"$pgid" "$media_directory"
+echo "setting up \"$group-media\"..."
+sudo mkdir -p "$group-media"
+sudo chown -R $USER:$USER "$group-media"
+sudo chown -R "$puid":"$pgid" "$group-media"
 
-echo "setting up \"$install_directory/config\"..."
-sudo mkdir -p "$install_directory/config"
-sudo chown -R $USER:$USER "$install_directory/config"
-sudo chown -R "$puid":"$pgid" "$install_directory/config"
+echo "setting up \"$group-config\"..."
+sudo mkdir -p "$group-config"
+sudo chown -R $USER:$USER "$group-config"
+sudo chown -R "$puid":"$pgid" "$group-config"
 
-echo "setting up \"$filename/docker-compose.yaml\" as \"$install_directory/docker-compose.yaml\"..."
-cp "$filename/docker-compose.yaml" "$install_directory/docker-compose.yaml"
-echo "setting up \"$filename/.env\" as \"$install_directory/.env\"..."
-cp "$filename/.env" "$env_file"
+echo "setting up \"$group-composer\" as \"$group-install/docker-compose.yaml\"..."
+cp "$group-composer" "$group-install/docker-compose.yaml"
+echo "setting up \"$group-env\" as \"$group-install/.env\"..."
+cp "$group-env" "$group-install/.env"
 
 echo "setting up .env file..."
-sudo sed -i -e "s|<your_PUID>|$puid|g" "$env_file" \
- -e "s|<your_PGID>|$pgid|g" "$env_file" \
- -e "s|<media_directory>|$media_directory|g" "$env_file" \
- -e "s|<install_directory>|$install_directory|g" "$env_file"
+sudo sed -i -e "s|<puid>|$puid|g" "$group-install/.env" \
+ -e "s|<pgid>|$pgid|g" "$group-install/.env" \
+ -e "s|<media>|$group-media|g" "$group-install/.env" \
+ -e "s|<installed>|$group-install|g" "$group-install/.env"
  
-echo "setting up $filename command..."
-sudo sed -i -e "s|<filename>|$install_directory/docker-compose.yaml|g" command \
- -e "s|<install_directory>|$install_directory|g"  \
- -e "s|<command_name>|$filename|g"
-sudo cp command "/usr/local/bin/$filename"
-sudo chmod +x "/usr/local/bin/$filename"
+echo "setting up $config command..."
+sudo sed -i -e "s|<dockerfile>|$group-install/docker-compose.yaml|g" command \
+ -e "s|<installed>|$group-install|g"  \
+ -e "s|<name>|$config|g"
+sudo cp command "/usr/local/bin/$config"
+sudo chmod +x "/usr/local/bin/$config"
 
 echo "setting up docker compose..."
-docker compose -f "$install_directory/docker-compose.yaml" up -d
+docker compose -f "$group-install/docker-compose.yaml" up -d
 
 echo "done!"
 exit 0
