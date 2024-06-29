@@ -74,8 +74,7 @@ sed -i -e "s|<puid>|$puid|g" "$installenv" \
  -e "s|<pgid>|$pgid|g" "$installenv" \
  -e "s|<media>|$installmedia|g" "$installenv" \
  -e "s|<installed>|$installroot|g" "$installenv" 
-sed -i -e "s|<composer>|$installcomposer|g" command \
- -e "s|<name>|$config|g" command
+sed -i -e "s|<name>|$config|g" command
 docker compose -f "$installcomposer" up -d
 if sudo cp command "/usr/local/bin/$config" && sudo chmod +x "/usr/local/bin/$config"; then
     echo "$config command installed..."

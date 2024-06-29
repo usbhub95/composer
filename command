@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 IFS=$'\n\t'
-group="docker compose -f <composer>"
 name="<name>"
+composer="/$name/docker-compose.yaml"
 param=${1:-"--help"}
 case $param in
 	--help)
@@ -18,26 +18,26 @@ case $param in
 		;;
 	restart)
 		echo "restarting $name containers"
-		$group stop && $group up -d
+		docker compose -f $composer stop && docker compose -f up -d
 		echo "$name containers are starting, this may take a while..."
 		exit 0
 		;;
 	stop)
 		echo "stopping $name containers"
-		$group stop
+		docker compose -f $composer stop
 		echo "$name containers have been stopped!"
 		exit 0
 		;;
 	start)
 		echo "starting and permanently enabling $name containers and services..."
-		$group up -d
+		docker compose -f $composer up -d
 		echo "$name services have been permanently enabled!"
 		echo "$name containers are starting, this may take a while..."
 		exit 0
 		;;
 	disable)
 		echo "stopping and permanently disabling $name containers and services..."
-		$group down
+		docker compose -f $composer down
 		echo "$name services have been permanently disabled!"
 		echo "$name containers have been stopped!"
 		exit 0
