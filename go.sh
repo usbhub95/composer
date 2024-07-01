@@ -5,39 +5,24 @@ if [[ "$EUID" = 0 ]]; then
     echo "do not sudo this!"
 	exit 255
 fi
-doer=$USER
 if command -v git &> /dev/null; then
 	echo "git found..."
 else
 	echo "installing git..."
 	sudo apt install -y git
 fi
-function getdocker {
-	version=$(cat /etc/issue.net | awk '{print tolower($1)}')
-	sudo apt update
-	sudo apt install -y ca-certificates curl gnupg lsb-release
-	sudo mkdir -p /etc/apt/keyrings
-	curl -fsSL https://download.docker.com/linux/$version/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-	echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$version $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-	sudo apt update
-	sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-	sudo groupadd docker
-	sudo usermod -aG docker $doer
-	sudo su $doer --group="docker" --session-command="bash go.sh"
-	exit 2
-}
 if command -v docker &> /dev/null; then
 	echo "docker found..."
 	if docker compose version &> /dev/null; then
 		echo "docker compose found..."
 	else
 		echo "installing docker compose..."
-		getdocker
+		bash ./getdocker.sh
 		exit 1
 	fi
 else
 	echo "installing docker..."
-	getdocker
+	bash ./getdocker.sh
 	exit 1
 fi
 read -p "config name? [homeserv]" config
@@ -53,13 +38,13 @@ if [ ! -d "$installroot" ]; then
     fi
 fi
 if [ ! -w "$installroot" ] || [ ! -r "$installroot" ]; then
-	echo "bad perms on \"$installroot\", fixing..."
-    sudo chown -R $doer:$doer $installroot
+	echo "bad perms on \"$installroot\" NOT fixed!"
+    exit 255
 fi
 installcomposer="$installroot/docker-compose.yaml"
 installenv="$installroot/.env"
-puid=$(id -u "$doer");
-pgid=$(id -g "$doer");
+puid=$(id -u "$USER");
+pgid=$(id -g "$USER");
 installmedia="$installroot/media"
 if [ ! -d "$installmedia" ]; then
     echo "creating \"$installmedia\"..."
