@@ -12,6 +12,7 @@ else
 	sudo apt install -y git
 fi
 function getdocker {
+	version=$(cat /etc/issue.net | awk '{print tolower($1)}')
 	sudo apt update
 	sudo apt install -y ca-certificates curl gnupg lsb-release
 	sudo mkdir -p /etc/apt/keyrings
