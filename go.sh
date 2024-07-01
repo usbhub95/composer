@@ -21,7 +21,7 @@ function getdocker {
 	sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 	sudo usermod -aG docker $USER
 	sudo su $USER --session-command "go.sh"
-	exit 0
+	exit 2
 }
 if command -v docker &> /dev/null; then
 	echo "docker found..."
