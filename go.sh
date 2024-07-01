@@ -5,7 +5,7 @@ if [[ "$EUID" = 0 ]]; then
     echo "do not sudo this!"
 	exit 255
 fi
-TRUE_USER=$USER
+doer=$USER
 if command -v git &> /dev/null; then
 	echo "git found..."
 else
@@ -22,8 +22,8 @@ function getdocker {
 	sudo apt update
 	sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 	sudo groupadd docker
-	sudo usermod -aG docker $TRUE_USER
-	sudo su $TRUE_USER --group="docker" --session-command="bash go.sh"
+	sudo usermod -aG docker $doer
+	sudo su $doer --group="docker" --session-command="bash go.sh"
 	exit 2
 }
 if command -v docker &> /dev/null; then
@@ -54,12 +54,12 @@ if [ ! -d "$installroot" ]; then
 fi
 if [ ! -w "$installroot" ] || [ ! -r "$installroot" ]; then
 	echo "bad perms on \"$installroot\", fixing..."
-    sudo chown -R $TRUE_USER:$TRUE_USER $installroot
+    sudo chown -R $doer:$doer $installroot
 fi
 installcomposer="$installroot/docker-compose.yaml"
 installenv="$installroot/.env"
-puid=$(id -u "$TRUE_USER");
-pgid=$(id -g "$TRUE_USER");
+puid=$(id -u "$doer");
+pgid=$(id -g "$doer");
 installmedia="$installroot/media"
 if [ ! -d "$installmedia" ]; then
     echo "creating \"$installmedia\"..."
