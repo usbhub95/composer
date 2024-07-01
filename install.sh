@@ -13,7 +13,6 @@ fi
 if [[ "$EUID" = 0 ]]; then
     exit 0
 fi
-# edit this to suit needs
 installname="homeserv"
 if [ ! -d "/$installname" ]; then
     if mkdir -p "/$installname"; then
