@@ -47,11 +47,11 @@ if cp "$installname.env" "$installenv"; then
 else
     exit 5
 fi
-sed -i -e "s|<puid>|$puid|g" "$installenv" \
+sudo sed -i -e "s|<puid>|$puid|g" "$installenv" \
  -e "s|<pgid>|$pgid|g" "$installenv" \
  -e "s|<media>|$installmedia|g" "$installenv" \
  -e "s|<config>|/$installname/config|g" "$installenv"
-sed -i -e "s|<name>|$installname|g" command
+sudo sed -i -e "s|<name>|$installname|g" command
 docker compose -f "$installcomposer" up -d
 if  ![sudo cp command "/usr/local/bin/$installname" && sudo chmod +x "/usr/local/bin/$installname"]; then
     exit 6
