@@ -5,14 +5,7 @@ if [[ "$EUID" = 0 ]]; then
     echo "do not sudo this!"
 	exit 255
 fi
-config="homeserv"
-echo "checking requirements, expect a restart..."
-if command -v git &> /dev/null; then
-	echo "git found..."
-else
-	echo "installing git..."
-	sudo apt install -y git
-fi
+config="homeserv"}
 function getdocker {
 	version=$(cat /etc/issue.net | awk '{print tolower($1)}')
 	sudo apt update && sudo apt install -y ca-certificates curl gnupg lsb-release && sudo mkdir -p /etc/apt/keyrings
