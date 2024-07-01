@@ -5,25 +5,33 @@ if [[ "$EUID" = 0 ]]; then
     echo "do not sudo this!"
 	exit 255
 fi
-echo "checking requirements, expect restart..."
+echo "checking requirements, expect a restart..."
 if command -v git &> /dev/null; then
 	echo "git found..."
 else
 	echo "installing git..."
 	sudo apt install -y git
 fi
+function getdocker {
+	version=$(cat /etc/issue.net | awk '{print tolower($1)}')
+	sudo apt update && sudo apt install -y ca-certificates curl gnupg lsb-release && sudo mkdir -p /etc/apt/keyrings
+	curl -fsSL https://download.docker.com/linux/$version/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+	echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$version $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin && sudo usermod -aG docker $USER && sudo reboot
+	exit 2
+}
 if command -v docker &> /dev/null; then
 	echo "docker found..."
 	if docker compose version &> /dev/null; then
 		echo "docker compose found..."
 	else
 		echo "installing docker compose..."
-		bash ./getdocker.sh
+		getdocker
 		exit 1
 	fi
 else
 	echo "installing docker..."
-	bash ./getdocker.sh
+	getdocker
 	exit 1
 fi
 read -p "no restart needed. stack config to use? [homeserv]" config
