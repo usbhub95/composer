@@ -5,6 +5,7 @@ if [[ "$EUID" = 0 ]]; then
     echo "do not sudo this!"
 	exit 255
 fi
+echo "checking requirements, expect restart..."
 if command -v git &> /dev/null; then
 	echo "git found..."
 else
@@ -25,7 +26,7 @@ else
 	bash ./getdocker.sh
 	exit 1
 fi
-read -p "config name? [homeserv]" config
+read -p "no restart needed. stack config to use? [homeserv]" config
 config=${config:-"homeserv"}
 installroot="/$config"
 if [ ! -d "$installroot" ]; then
