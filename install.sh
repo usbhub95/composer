@@ -1,8 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 IFS=$'\n\t'
-sudo mkdir -p /opt/yams
-sudo chown -R $USER:$USER /opt/yams
+installname="homeserv"
+sudo mkdir -p "/$installname"
+sudo chown -R $USER:$USER "/$installname"
 if command -v docker &> /dev/null; then
     if ![docker compose version &> /dev/null]; then
         bash ./docker.sh
@@ -13,7 +14,7 @@ fi
 if [[ "$EUID" = 0 ]]; then
     exit 0
 fi
-installname="homeserv"
+
 if [ ! -d "/$installname" ]; then
     if mkdir -p "/$installname"; then
         echo
