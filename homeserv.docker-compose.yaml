@@ -9,7 +9,7 @@ services:
       - WEBUI_PORT=8080
     volumes:
       - ${media}/downloads:/downloads
-      - ${installed}/config/qbittorrent:/config
+      - ${config}/qbittorrent:/config
     ports:
       - 8080:8080
     restart: unless-stopped
@@ -23,7 +23,7 @@ services:
     volumes:
       - ${media}/music:/music
       - ${media}/downloads:/downloads
-      - ${installed}/config/lidarr:/config
+      - ${config}/lidarr:/config
     ports:
       - 8686:8686
     restart: unless-stopped
@@ -37,7 +37,7 @@ services:
     volumes:
       - ${media}/books:/books
       - ${media}/downloads:/downloads
-      - ${installed}/config/readarr:/config
+      - ${config}/readarr:/config
     ports:
       - 8787:8787
     restart: unless-stopped
@@ -50,7 +50,7 @@ services:
       - PGID=${pgid}
       - AUTO_UPDATE=true
     volumes:
-      - ${installed}/config/jackett:/config
+      - ${config}/jackett:/config
       - ${media}/downloads:/downloads
     ports:
       - 9117:9117

@@ -1,115 +1,73 @@
 #!/bin/bash
 set -euo pipefail
 IFS=$'\n\t'
-if [[ "$EUID" = 0 ]]; then
-    echo "do not sudo this!"
-	exit 255
-fi
-config="homeserv"}
-function getdocker {
-	version=$(cat /etc/issue.net | awk '{print tolower($1)}')
-	sudo apt update && sudo apt install -y ca-certificates curl gnupg lsb-release && sudo mkdir -p /etc/apt/keyrings
-	curl -fsSL https://download.docker.com/linux/$version/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-	echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$version $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-	sudo apt update && sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin && sudo groupadd docker && sudo usermod -aG docker $USER && sudo logout
-	exit 2
-}
+sudo mkdir -p /opt/yams
+sudo chown -R $USER:$USER /opt/yams
 if command -v docker &> /dev/null; then
-	echo "docker found..."
-	if docker compose version &> /dev/null; then
-		echo "docker compose found..."
-	else
-		echo "installing docker compose..."
-		getdocker
-		exit 1
-	fi
+    if ![docker compose version &> /dev/null]; then
+        bash ./docker.sh
+    fi
 else
-	echo "installing docker..."
-	getdocker
-	exit 1
+    bash ./docker.sh
 fi
-installroot="/$config"
-if [ ! -d "$installroot" ]; then
-    echo "creating \"$installroot\"..."
-    if sudo mkdir -p "$installroot"; then
-        echo "\"$installroot\" created..."
+if [[ "$EUID" = 0 ]]; then
+    exit 0
+fi
+# edit this to suit needs
+installname="homeserv"
+if [ ! -d "/$installname" ]; then
+    if mkdir -p "/$installname"; then
+        echo
     else
-        echo "\"$installroot\" NOT created!"
-		exit 255
+        exit 1
     fi
 fi
-if [ ! -w "$installroot" ] || [ ! -r "$installroot" ]; then
-	echo "bad perms on \"$installroot\" NOT fixed!"
-    exit 255
+if [ ! -w "/$installname" ] || [ ! -r "/$installname" ]; then
+    exit 2
 fi
-installcomposer="$installroot/docker-compose.yaml"
-installenv="$installroot/.env"
+installcomposer="/$installname/docker-compose.yaml"
+installenv="/$installname/.env"
 puid=$(id -u "$USER");
 pgid=$(id -g "$USER");
-installmedia="$installroot/media"
+installmedia="/$installname/media"
 if [ ! -d "$installmedia" ]; then
-    echo "creating \"$installmedia\"..."
     if mkdir -p "$installmedia"; then
-        echo "\"$installmedia\" created..."
+        echo
     else
-        echo "\"$installmedia\" NOT created!"
-		exit 255
+        exit 3
     fi
 fi
-installfiles=(
-    "$config.docker-compose.yaml:$installcomposer"
-    "$config.env:$installenv"
-)
-for file in "${installfiles[@]}"; do
-    source="${file%%:*}"
-    dest="${file##*:}"
-    echo "installing \"$source\"..."
-    if cp "$source" "$dest"; then
-        echo "\"$source\" installed..."
-    else
-        echo "\"$source\" NOT installed!"
-		exit 255
-    fi
-done
+if cp "$installname.docker-compose.yaml" "$installcomposer"; then
+    echo
+else
+    exit 4
+fi
+if cp "$installname.env" "$installenv"; then
+    echo
+else
+    exit 5
+fi
 sed -i -e "s|<puid>|$puid|g" "$installenv" \
  -e "s|<pgid>|$pgid|g" "$installenv" \
  -e "s|<media>|$installmedia|g" "$installenv" \
- -e "s|<installed>|$installroot|g" "$installenv" 
-sed -i -e "s|<name>|$config|g" command
+ -e "s|<config>|/$installname/config|g" "$installenv"
+sed -i -e "s|<name>|$installname|g" command
 docker compose -f "$installcomposer" up -d
-if sudo cp command "/usr/local/bin/$config" && sudo chmod +x "/usr/local/bin/$config"; then
-    echo "$config command installed..."
-else
-    echo "$config command NOT installed!"
-	exit 255
+if  ![sudo cp command "/usr/local/bin/$installname" && sudo chmod +x "/usr/local/bin/$installname"]; then
+    exit 6
 fi
-if sudo chown -R "$puid":"$pgid" "$installmedia"; then
-    echo "\"$installmedia\" permissions set..."
-else
-    echo "\"$installmedia\" permissions NOT set!"
-	exit 255
+if ![sudo chown -R "$puid":"$pgid" "$installmedia"]; then
+    exit 7
 fi
-if sudo chown -R "$puid":"$pgid" "$installroot"; then
-    echo "\"$installroot\" permissions set..."
-else
-    echo "\"$installroot\" permissions NOT set!"
-	exit 255
+if ![sudo chown -R "$puid":"$pgid" "/$installname"]; then
+    exit 8
 fi
-if [[ -d "$installroot/config" ]]; then
-    echo "\"$installroot/config\" found..."
-else
-    if sudo mkdir -p "$installroot/config"; then
-        echo "\"$installroot/config\" installed..."
-    else
-        echo "\"$installroot/config\" installed..."
-		exit 255
+if ![[ -d "/$installname/config" ]]; then
+    if ![sudo mkdir -p "/$installname/config"]; then
+        exit 9
     fi
 fi
-if sudo chown -R "$puid":"$pgid" "$installroot/config"; then
-    echo "\"$installroot/config\" permissions set..."
-else
-    echo "\"$installroot/config\" permissions set..."
-	exit 255
+if ![sudo chown -R "$puid":"$pgid" "/$installname/config"]; then
+    exit 10
 fi
-echo "all done!"
-exit 0
+exit 11
