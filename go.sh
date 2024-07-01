@@ -21,7 +21,8 @@ function getdocker {
 	sudo apt update
 	sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 	sudo usermod -aG docker $USER
-	sudo su $USER --session-command "go.sh"
+	sudo newgrp docker
+	sudo su $USER --session-command "bash go.sh"
 	exit 2
 }
 if command -v docker &> /dev/null; then

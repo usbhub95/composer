@@ -63,7 +63,7 @@ services:
       - LOG_HTML=false
       - CAPTCHA_SOLVER=none
     ports:
-      - -8191:8191
+      - 8191:8191
     restart: unless-stopped
   # Auto update - Watchtower
   watchtower:
