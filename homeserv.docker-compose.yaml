@@ -55,6 +55,16 @@ services:
     ports:
       - 9117:9117
     restart: unless-stopped
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+    ports:
+      - -8191:8191
+    restart: unless-stopped
   # Auto update - Watchtower
   watchtower:
     image: containrrr/watchtower
