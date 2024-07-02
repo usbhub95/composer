@@ -2,72 +2,28 @@
 set -euo pipefail
 IFS=$'\n\t'
 installname="homeserv"
-sudo mkdir -p "~/$installname"
-sudo chown -R $USER:$USER "~/$installname"
-if command -v docker &> /dev/null; then
-    if ![docker compose version &> /dev/null]; then
-        bash ./docker.sh
-    fi
-else
-    bash ./docker.sh
-fi
+sudo mkdir -p "~/$installname" || exit 1
+sudo chown -R $USER:$USER "~/$installname" || exit 2
+(docker &> /dev/null && docker compose version &> /dev/null) || bash ./docker.sh
 if [[ "$EUID" = 0 ]]; then
     exit 0
 fi
-
-if [ ! -d "~/$installname" ]; then
-    if mkdir -p "~/$installname"; then
-        echo
-    else
-        exit 1
-    fi
-fi
-if [ ! -w "~/$installname" ] || [ ! -r "~/$installname" ]; then
-    exit 2
-fi
+([ ! -d "~/$installname" ] && mkdir -p "~/$installname") || exit 3
+([ ! -w "~/$installname" ] || [ ! -r "~/$installname" ]) || exit 4
 installcomposer="~/$installname/docker-compose.yaml"
 installenv="~/$installname/.env"
 puid=$(id -u "$USER");
 pgid=$(id -g "$USER");
 installmedia="~/$installname/media"
-if [ ! -d "$installmedia" ]; then
-    if mkdir -p "$installmedia"; then
-        echo
-    else
-        exit 3
-    fi
-fi
-if cp "$installname.docker-compose.yaml" "$installcomposer"; then
-    echo
-else
-    exit 4
-fi
-if cp "$installname.env" "$installenv"; then
-    echo
-else
-    exit 5
-fi
-sed -i -e "s|<puid>|$puid|g" "$installenv" \
- -e "s|<pgid>|$pgid|g" "$installenv" \
- -e "s|<media>|$installmedia|g" "$installenv" \
- -e "s|<config>|~/$installname/config|g" "$installenv"
-sed -i -e "s|<name>|$installname|g" command
-docker compose -f "$installcomposer" up -d
-if  ![sudo cp command "/usr/local/bin~/$installname" && sudo chmod +x "/usr/local/bin~/$installname"]; then
-    exit 6
-fi
-if ![sudo chown -R "$puid":"$pgid" "$installmedia"]; then
-    exit 7
-fi
-if ![sudo chown -R "$puid":"$pgid" "~/$installname"]; then
-    exit 8
-fi
-if ![[ -d "~/$installname/config" ]]; then
-    if ![sudo mkdir -p "~/$installname/config"]; then
-        exit 9
-    fi
-fi
-if ![sudo chown -R "$puid":"$pgid" "~/$installname/config"]; then
-    exit 10
-fi
-exit 11
+([ ! -d "$installmedia" ] && mkdir -p "$installmedia") || exit 5
+cp "$installname.docker-compose.yaml" "$installcomposer" || exit 6
+cp "$installname.env" "$installenv" || exit 7
+sed -i -e "s|<puid>|$puid|g" "$installenv" -e "s|<pgid>|$pgid|g" "$installenv" -e "s|<media>|$installmedia|g" "$installenv" -e "s|<config>|~/$installname/config|g" "$installenv" || exit 8
+sed -i -e "s|<name>|$installname|g" command || exit 9
+docker compose -f "$installcomposer" up -d || exit 10
+(sudo cp command "/usr/local/bin~/$installname" && sudo chmod +x "/usr/local/bin~/$installname") || exit 11
+sudo chown -R "$puid":"$pgid" "$installmedia" || exit 12
+sudo chown -R "$puid":"$pgid" "~/$installname" || exit 13
+([ ! -d "~/$installname/config" ] && sudo mkdir -p "~/$installname/config") || exit 14
+sudo chown -R "$puid":"$pgid" "~/$installname/config" || exit 15
+exit 16
