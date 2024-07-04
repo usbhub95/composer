@@ -2,7 +2,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 name="<name>"
-composer="/$name/docker-compose.yaml"
+composer="<composer>"
 param=${1:-"--help"}
 case $param in
 	--help)

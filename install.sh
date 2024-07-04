@@ -1,29 +1,32 @@
 #!/bin/bash
 set -euo pipefail
 IFS=$'\n\t'
-installname="homeserv"
-sudo mkdir -p "~/$installname"
-sudo chown -R $USER:$USER "~/$installname"
-( docker &> /dev/null && docker compose version &> /dev/null ) || bash ./docker.sh
+[[ docker && docker compose version ]] || [[ bash ./docker.sh && exit 0 ]]
 if [[ "$EUID" = 0 ]]; then
     exit 1
 fi
-[ ! -d "~/$installname" ] && mkdir -p "~/$installname"
-[ ! -w "~/$installname" ] || [ ! -r "~/$installname" ]
-installcomposer="~/$installname/docker-compose.yaml"
-installenv="~/$installname/.env"
+config="homeserv"
+installdir="~/$config"
+composer="$installdir/docker-compose.yaml"
+env="$installdir/.env"
 puid=$(id -u "$USER");
 pgid=$(id -g "$USER");
-installmedia="~/$installname/media"
-[ ! -d "$installmedia" ] && mkdir -p "$installmedia"
-cp "$installname.docker-compose.yaml" "$installcomposer"
-cp "$installname.env" "$installenv"
-sed -i -e "s|<puid>|$puid|g" "$installenv" -e "s|<pgid>|$pgid|g" "$installenv" -e "s|<media>|$installmedia|g" "$installenv" -e "s|<config>|~/$installname/config|g" "$installenv"
-sed -i -e "s|<name>|$installname|g" command
-docker compose -f "$installcomposer" up -d
-sudo cp command "/usr/local/bin~/$installname" && sudo chmod +x "/usr/local/bin~/$installname"
-sudo chown -R "$puid":"$pgid" "$installmedia"
-sudo chown -R "$puid":"$pgid" "~/$installname"
-[ ! -d "~/$installname/config" ] && sudo mkdir -p "~/$installname/config"
-sudo chown -R "$puid":"$pgid" "~/$installname/config"
-exit 0
+mediadir="$installdir/media"
+configdir="$installdir/config"
+[[ -d "$installdir" ]] || mkdir -p "$installdir"
+[[ -w "$installdir" && -r "$installdir" ]] || exit 2
+[[ -d "$mediadir" ]] || mkdir -p "$mediadir"
+cp "$config.docker-compose.yaml" "$composer"
+cp "$config.env" "$env"
+sed -i -e "s|<puid>|$puid|g" "$env" \
+ -e "s|<pgid>|$pgid|g" "$env" \
+ -e "s|<media>|$mediadir|g" "$env" \
+ -e "s|<config>|$configdir|g" "$env" \
+ -e "s|<name>|$config|g" command \
+ -e "s|<composer>|$composer|g" command
+docker compose -f "$composer" up -d
+sudo cp command "/usr/local/bin/$config" && sudo chmod +x "/usr/local/bin/$config"
+sudo chown -R "$puid":"$pgid" "$mediadir"
+sudo chown -R "$puid":"$pgid" "$installdir"
+[[ -d "$configdir" ]] || sudo mkdir -p "$configdir"
+sudo chown -R "$puid":"$pgid" "$configdir"
