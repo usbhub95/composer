@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 IFS=$'\n\t'
-[[ docker && docker compose version ]] || [[ bash ./docker.sh && exit 0 ]]
+(docker && docker compose version) || (bash ./docker.sh && exit 0)
 if [[ "$EUID" = 0 ]]; then
     exit 1
 fi
@@ -13,9 +13,9 @@ puid=$(id -u "$USER");
 pgid=$(id -g "$USER");
 mediadir="$installdir/media"
 configdir="$installdir/config"
-[[ -d "$installdir" ]] || mkdir -p "$installdir"
-[[ -w "$installdir" && -r "$installdir" ]] || exit 2
-[[ -d "$mediadir" ]] || mkdir -p "$mediadir"
+-d "$installdir" || mkdir -p "$installdir"
+(-w "$installdir" && -r "$installdir") || exit 2
+-d "$mediadir" || mkdir -p "$mediadir"
 cp "$config.docker-compose.yaml" "$composer"
 cp "$config.env" "$env"
 sed -i -e "s|<puid>|$puid|g" "$env" \
@@ -28,5 +28,5 @@ docker compose -f "$composer" up -d
 sudo cp command "/usr/local/bin/$config" && sudo chmod +x "/usr/local/bin/$config"
 sudo chown -R "$puid":"$pgid" "$mediadir"
 sudo chown -R "$puid":"$pgid" "$installdir"
-[[ -d "$configdir" ]] || sudo mkdir -p "$configdir"
+-d "$configdir" || sudo mkdir -p "$configdir"
 sudo chown -R "$puid":"$pgid" "$configdir"
