@@ -6,7 +6,7 @@ if [[ "$EUID" = 0 ]]; then
     exit 1
 fi
 config="homeserv"
-installdir="~/$config"
+installdir="/home/$USER/$config"
 composer="$installdir/docker-compose.yaml"
 env="$installdir/.env"
 puid=$(id -u "$USER");
