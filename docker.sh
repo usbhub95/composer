@@ -11,3 +11,4 @@ sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 sudo usermod -aG docker "$USER"
 sudo su "$USER" --session-command "bash install.sh"
+exit 0

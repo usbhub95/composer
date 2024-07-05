@@ -29,3 +29,4 @@ sudo chown -R "$puid":"$pgid" "$mediadir"
 sudo chown -R "$puid":"$pgid" "$installdir"
 dir "$configdir" || sudo mkdir -p "$configdir"
 sudo chown -R "$puid":"$pgid" "$configdir"
+exit 0
