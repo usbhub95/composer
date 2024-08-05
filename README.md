@@ -1,4 +1,7 @@
-<!-- composer -->
+<!--
+composer
+placeholder
+-->
 <a id="readme-top"></a>
 
 <!-- shields -->
