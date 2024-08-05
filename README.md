@@ -50,8 +50,6 @@ placeholder
 
 I made this so I could set up my home server easily and do the same for my friends and family.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- GETTING STARTED -->
 ## Getting Started
 
